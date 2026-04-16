@@ -3,54 +3,69 @@ from django.shortcuts import render
 from .apps import DetectorConfig
 from PIL import Image
 import numpy as np
-
-# Imports for displaying the image back on the website
 import base64
 import io
 
-# Specific Keras Preprocessors to make sure ResNet and EfficientNet don't crash
+# Import ALL the specific Keras Preprocessors
 from tensorflow.keras.applications.resnet50 import preprocess_input as resnet_preprocess
 from tensorflow.keras.applications.efficientnet import preprocess_input as effnet_preprocess
+from tensorflow.keras.applications.densenet import preprocess_input as densenet_preprocess
 
 FISH_CLASSES = {0: 'MilkFish', 1: 'Tilapia'} 
 DISEASE_CLASSES = {0: 'Bacterial Red disease', 1: 'Bacterial gill disease', 2: 'Fungal diseases Saprolegniasis', 3: 'Healthy'}
+
+# Custom preprocessing for your CNN trained from scratch
+def custom_preprocess(img_array):
+    return img_array / 255.0
+
+# Map the dropdown names to their exact math formulas!
+PREPROCESSORS = {
+    'ResNet50': resnet_preprocess,
+    'EfficientNetB0': effnet_preprocess,
+    'DenseNet121': densenet_preprocess,
+    'Custom': custom_preprocess
+}
 
 def home_view(request):
     context = {}
 
     if request.method == 'POST' and request.FILES.get('image'):
         try:
-            # Grab the image from the form
             image_file = request.FILES['image']
             img = Image.open(image_file).convert('RGB')
             
-            # Convert image to Base64 so we can show it on the HTML page
+            # Base64 Image Preview
             buffer = io.BytesIO()
             img.save(buffer, format="JPEG")
             img_b64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
             context['uploaded_image'] = f"data:image/jpeg;base64,{img_b64}"
 
-            # Resize to 224x224 (DO NOT divide by 255 here!)
+            # Grab what the user selected from the dropdowns (Default to ResNet/EfficientNet)
+            selected_species_model = request.POST.get('species_model', 'ResNet50')
+            selected_disease_model = request.POST.get('disease_model', 'EfficientNetB0')
+
+            # Pass the selections back to the HTML so we know what was used
+            context['used_species_model'] = selected_species_model
+            context['used_disease_model'] = selected_disease_model
+
+            # Resize
             img = img.resize((224, 224))
             img_array = np.array(img, dtype=np.float32) 
             
-            # Create two separate copies for the two different models
-            resnet_input = np.expand_dims(img_array.copy(), axis=0)
-            effnet_input = np.expand_dims(img_array.copy(), axis=0)
+            species_input = np.expand_dims(img_array.copy(), axis=0)
+            disease_input = np.expand_dims(img_array.copy(), axis=0)
 
-            # Apply the specific mathematical preprocessing for each architecture
-            resnet_input = resnet_preprocess(resnet_input) 
-            effnet_input = effnet_preprocess(effnet_input) 
+            # Apply the EXACT math needed for the model they chose
+            species_input = PREPROCESSORS[selected_species_model](species_input)
+            disease_input = PREPROCESSORS[selected_disease_model](disease_input)
 
-            # Predict
-            type_pred = DetectorConfig.type_model.predict(resnet_input)
-            disease_pred = DetectorConfig.disease_model.predict(effnet_input)
+            # Predict using the chosen models!
+            type_pred = DetectorConfig.species_models[selected_species_model].predict(species_input)
+            disease_pred = DetectorConfig.disease_models[selected_disease_model].predict(disease_input)
 
-            # Get the highest confidence class
             type_idx = np.argmax(type_pred[0])
             disease_idx = np.argmax(disease_pred[0])
 
-            # Send all data back to the webpage
             context['result'] = {
                 'fish': FISH_CLASSES.get(type_idx, "Unknown"),
                 'disease': DISEASE_CLASSES.get(disease_idx, "Unknown"),

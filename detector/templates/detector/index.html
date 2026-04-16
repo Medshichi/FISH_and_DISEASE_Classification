@@ -13,7 +13,7 @@
         <div class="header-con">
             <div class="inner-head">
                 <h1>Aquaculture AI Scanner</h1>
-                <p>Powered by ResNet50 & EfficientNetB0</p>
+                <p>Multi-Model Benchmarking Platform</p>
             </div>
         </div>
         <div class="navbar">
@@ -35,6 +35,28 @@
                     
                     <input id="file-upload" type="file" name="image" accept="image/*" required onchange="showPreview(event)">
                 </label>
+
+                <div style="display: flex; gap: 20px; width: 100%; max-width: 600px; text-align: left; margin-bottom: 10px;">
+                    <div style="flex: 1;">
+                        <label style="font-weight: bold; color: #302f2f; margin-bottom: 5px; display: block;">Select Species Model:</label>
+                        <select name="species_model" style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #ccc; font-size: 1em; outline: none; cursor: pointer;">
+                            <option value="ResNet50" selected>ResNet50 (Highest Accuracy)</option>
+                            <option value="EfficientNetB0">EfficientNetB0 (Fastest)</option>
+                            <option value="DenseNet121">DenseNet121</option>
+                            <option value="Custom">Custom CNN Scratch</option>
+                        </select>
+                    </div>
+
+                    <div style="flex: 1;">
+                        <label style="font-weight: bold; color: #302f2f; margin-bottom: 5px; display: block;">Select Disease Model:</label>
+                        <select name="disease_model" style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #ccc; font-size: 1em; outline: none; cursor: pointer;">
+                            <option value="EfficientNetB0" selected>EfficientNetB0 (Recommended)</option>
+                            <option value="ResNet50">ResNet50</option>
+                            <option value="DenseNet121">DenseNet121</option>
+                            <option value="Custom">Custom CNN Scratch</option>
+                        </select>
+                    </div>
+                </div>
                 
                 <div class="sub-button">
                     <button type="submit">ANALYZE FISH</button>
@@ -61,24 +83,35 @@
                 <hr style="border: none; border-top: 1px solid #eee; margin: 25px 0;">
                 
                 <div style="text-align: left; margin-top: 20px;">
-                    <p class="confidence-text">Species Confidence: <strong>{{ result.conf_fish }}%</strong></p>
+                    <p class="confidence-text">
+                        Species Confidence 
+                        <span style="font-size: 0.8em; color: #888;">(via {{ used_species_model }})</span>: 
+                        <strong>{{ result.conf_fish }}%</strong>
+                    </p>
                     <div class="confidence-bar-container">
                         <div class="confidence-bar-fill" style="width: {{ result.conf_fish }}%;"></div>
                     </div>
                 </div>
 
                 <div style="text-align: left; margin-top: 20px;">
-                    <p class="confidence-text">Disease Confidence: <strong>{{ result.conf_disease }}%</strong></p>
+                    <p class="confidence-text">
+                        Disease Confidence 
+                        <span style="font-size: 0.8em; color: #888;">(via {{ used_disease_model }})</span>: 
+                        <strong>{{ result.conf_disease }}%</strong>
+                    </p>
                     <div class="confidence-bar-container">
                         <div class="confidence-bar-fill" style="width: {{ result.conf_disease }}%;"></div>
                     </div>
                 </div>
                 
+                {% if result.disease != 'Healthy' and result.disease != 'Unknown' %}
                 <div style="margin-top: 35px; text-align: center;">
                     <a href="{% url 'treatment' result.disease %}" style="display: inline-block; background-color: #d93025; color: white; padding: 15px 40px; font-size: 1.2em; font-weight: bold; text-decoration: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(217, 48, 37, 0.4); transition: transform 0.2s;">
                         <i class="fa-solid fa-briefcase-medical"></i> HEAL MY FISH
                     </a>
                 </div>
+                {% endif %}
+                
             </div>
         </div>
         {% endif %}
