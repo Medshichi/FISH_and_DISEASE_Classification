@@ -17,7 +17,7 @@ Including another URLconf
 # core/urls.py
 from django.contrib import admin
 from django.urls import path
-from detector.views import home_view, treatment_view # Import the new view
+from detector.views import home_view, treatment_view 
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -20,37 +20,37 @@ def home_view(request):
 
     if request.method == 'POST' and request.FILES.get('image'):
         try:
-            # 1. Grab the image from the form
+            # Grab the image from the form
             image_file = request.FILES['image']
             img = Image.open(image_file).convert('RGB')
             
-            # 2. Convert image to Base64 so we can show it on the HTML page
+            # Convert image to Base64 so we can show it on the HTML page
             buffer = io.BytesIO()
             img.save(buffer, format="JPEG")
             img_b64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
             context['uploaded_image'] = f"data:image/jpeg;base64,{img_b64}"
 
-            # 3. Resize to 224x224 (DO NOT divide by 255 here!)
+            # Resize to 224x224 (DO NOT divide by 255 here!)
             img = img.resize((224, 224))
             img_array = np.array(img, dtype=np.float32) 
             
-            # 4. Create two separate copies for the two different models
+            # Create two separate copies for the two different models
             resnet_input = np.expand_dims(img_array.copy(), axis=0)
             effnet_input = np.expand_dims(img_array.copy(), axis=0)
 
-            # 5. Apply the specific mathematical preprocessing for each architecture
+            # Apply the specific mathematical preprocessing for each architecture
             resnet_input = resnet_preprocess(resnet_input) 
             effnet_input = effnet_preprocess(effnet_input) 
 
-            # 6. Predict
+            # Predict
             type_pred = DetectorConfig.type_model.predict(resnet_input)
             disease_pred = DetectorConfig.disease_model.predict(effnet_input)
 
-            # 7. Get the highest confidence class
+            # Get the highest confidence class
             type_idx = np.argmax(type_pred[0])
             disease_idx = np.argmax(disease_pred[0])
 
-            # 8. Send all data back to the webpage
+            # Send all data back to the webpage
             context['result'] = {
                 'fish': FISH_CLASSES.get(type_idx, "Unknown"),
                 'disease': DISEASE_CLASSES.get(disease_idx, "Unknown"),
@@ -62,7 +62,7 @@ def home_view(request):
 
     return render(request, 'detector/index.html', context)
 
-
+# Here we prepare the step on how auqa culture farms owner can mitigate the detected disease in the fish
 TREATMENT_PLANS = {
     'Bacterial Red disease': {
         'title': 'Treating Bacterial Red Disease (Pond Scale)',

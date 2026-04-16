@@ -4,9 +4,7 @@ import tensorflow as tf
 import os
 from django.conf import settings
 
-# ==========================================
-# THE FIX: Intercept and delete the buggy tag
-# ==========================================
+
 original_dense_init = tf.keras.layers.Dense.__init__
 
 def custom_dense_init(self, *args, **kwargs):
@@ -16,7 +14,6 @@ def custom_dense_init(self, *args, **kwargs):
 
 # Overwrite the default layer with our custom one
 tf.keras.layers.Dense.__init__ = custom_dense_init
-# ==========================================
 
 
 class DetectorConfig(AppConfig):
@@ -33,4 +30,4 @@ class DetectorConfig(AppConfig):
         DetectorConfig.type_model = tf.keras.models.load_model(os.path.join(base_dir, 'models', 'FishClass_ResNet50_99.h5'))
         DetectorConfig.disease_model = tf.keras.models.load_model(os.path.join(base_dir, 'models', 'fish_disease_EfficientNetB0_finetuned.h5'))
         
-        print("✅ Models loaded successfully!")
+        print("Models loaded successfully!")
