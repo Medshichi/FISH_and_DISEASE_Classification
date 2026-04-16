@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/homepage.css' %}">
+    <script src="https://kit.fontawesome.com/b7fa3da7bb.js" crossorigin="anonymous"></script>
+    <title>Treatment Plan</title>
+</head>
+<body>
+    <header>
+        <div class="header-con">
+            <div class="inner-head">
+                <h1>Aquaculture AI Scanner</h1>
+                <p>Medical Protocol</p>
+            </div>
+        </div>
+        <div class="navbar">
+            <a href="/">← BACK TO SCANNER</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="result-container">
+            <div class="result-card" style="max-width: 800px; text-align: left;">
+                
+                {% if plan %}
+                    <h2 style="color: #d93025; font-size: 2em; text-align: center;">
+                        <i class="fa-solid fa-heart-pulse"></i> {{ plan.title|upper }}
+                    </h2>
+                    
+                    <p style="font-size: 1.2em; color: #555; text-align: center; margin-bottom: 30px;">
+                        {{ plan.description }}
+                    </p>
+
+                    <div style="background: #f8f9fa; padding: 30px; border-radius: 15px; border-left: 5px solid #d93025;">
+                        <h3 style="margin-top: 0; color: #302f2f;">Step-by-Step Recovery Protocol:</h3>
+                        
+                        <ol style="font-size: 1.2em; line-height: 1.8; color: #333; padding-left: 20px;">
+                            {% for step in plan.steps %}
+                                <li style="margin-bottom: 15px;">{{ step }}</li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 30px;">
+                        <a href="/" style="color: #0056b3; font-weight: bold; text-decoration: none;">Scan Another Fish</a>
+                    </div>
+
+                {% else %}
+                    <h2 style="color: red; text-align: center;">Plan Not Found</h2>
+                    <p style="text-align: center;">No treatment protocol is currently documented for {{ disease }}. Please consult a local marine veterinarian.</p>
+                {% endif %}
+
+            </div>
+        </div>
+    </main>
+</body>
+</html>

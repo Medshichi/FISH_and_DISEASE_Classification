@@ -1,0 +1,38 @@
+/* static/css/homepage.css */
+body { margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background-color: #f8f9fa;}
+
+.header-con { display: flex; justify-content: center; background-color: rgb(0, 0, 0); border-bottom: 3px solid white;}
+.inner-head { display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; padding: 20px 0;}
+.inner-head h1 { font-size: 3em; margin: 10px 0;}
+.inner-head p { margin-top: 0; color: #ccc;}
+
+.navbar { background-color: #302f2f; display: flex; justify-content: flex-end; align-items: center;}
+.navbar a { padding: 20px 30px; text-decoration: none; color: white; font-size: 1.2em; font-weight: 500; transition: background-color 0.5s;}
+.navbar a:hover { background-color: black;}
+
+form { margin: 40px auto; display: flex; flex-direction: column; align-items: center; gap: 30px; max-width: 800px;}
+
+.image-sub { display: flex; flex-direction: column; justify-content: center; align-items: center; border: 3px dashed #302f2f; background-color: #fff; border-radius: 20px; width: 100%; max-width: 600px; height: 300px; cursor: pointer; transition: all 0.3s ease; color: #555;}
+.image-sub:hover { background-color: #e9ecef; border-color: black; color: black; transform: translateY(-5px);}
+.image-sub i { font-size: 5em; margin-bottom: 20px;}
+.image-sub .upload-text { font-size: 1.5em; font-weight: 500;}
+.image-sub input[type="file"] { display: none;}
+
+.sub-button button { outline: none; border: none; background-color: #302f2f; color: white; padding: 15px 60px; font-size: 1.5em; cursor: pointer; border-radius: 50px; transition: background-color 0.3s, transform 0.2s; box-shadow: 0px 5px 15px rgba(0,0,0,0.2);}
+.sub-button button:hover { background-color: black; transform: scale(1.05);}
+.sub-button button:active { transform: scale(0.95);}
+
+.result-container { display: flex; justify-content: center; margin: 40px 0; animation: slideUp 0.5s ease-out;}
+.result-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 550px; border: 1px solid #eee;}
+.result-card h2 { color: #302f2f; margin-bottom: 10px; font-size: 1.2em; text-transform: uppercase; letter-spacing: 1px;}
+
+.predicted-label { margin: 10px 0;}
+
+.confidence-bar-container { background-color: #e9ecef; border-radius: 10px; height: 12px; width: 100%; margin: 10px 0 20px 0; overflow: hidden;}
+.confidence-bar-fill { background-color: #302f2f; height: 100%; border-radius: 10px; transition: width 1s ease-in-out;}
+.confidence-text { font-size: 1em; color: #555; margin: 0;}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

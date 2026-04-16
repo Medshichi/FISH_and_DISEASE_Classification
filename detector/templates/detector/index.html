@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/homepage.css' %}">
+    <script src="https://kit.fontawesome.com/b7fa3da7bb.js" crossorigin="anonymous"></script>
+    <title>Aquaculture AI Scanner</title>
+</head>
+<body>
+    <header>
+        <div class="header-con">
+            <div class="inner-head">
+                <h1>Aquaculture AI Scanner</h1>
+                <p>Powered by ResNet50 & EfficientNetB0</p>
+            </div>
+        </div>
+        <div class="navbar">
+            <a href="/">HOME</a>
+            <a href="#">About Project</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="submission">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <label class="image-sub" for="file-upload">
+                    <i class="fa-solid fa-fish-fins" id="upload-icon"></i>
+                    <span class="upload-text" id="upload-text">Choose a fish image to scan</span>
+                    
+                    <img id="image-preview" src="#" alt="Image Preview" style="display: none; max-width: 90%; max-height: 250px; border-radius: 15px; object-fit: contain;">
+                    
+                    <input id="file-upload" type="file" name="image" accept="image/*" required onchange="showPreview(event)">
+                </label>
+                
+                <div class="sub-button">
+                    <button type="submit">ANALYZE FISH</button>
+                </div>  
+            </form>
+        </div>
+
+        {% if result %}
+        <div class="result-container">
+            <div class="result-card">
+                
+                {% if uploaded_image %}
+                    <img src="{{ uploaded_image }}" alt="Uploaded Fish" style="width: 100%; max-width: 300px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                {% endif %}
+
+                <h2>AI Diagnosis</h2>
+                
+                <div class="predicted-label" style="font-size: 1.6em; line-height: 1.5; color: #302f2f;">
+                    We are confident that this <strong>{{ result.fish|upper }}</strong> 
+                    has a health status of: <br>
+                    <span style="color: #000; font-size: 1.2em;">{{ result.disease|upper }}</span>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid #eee; margin: 25px 0;">
+                
+                <div style="text-align: left; margin-top: 20px;">
+                    <p class="confidence-text">Species Confidence: <strong>{{ result.conf_fish }}%</strong></p>
+                    <div class="confidence-bar-container">
+                        <div class="confidence-bar-fill" style="width: {{ result.conf_fish }}%;"></div>
+                    </div>
+                </div>
+
+                <div style="text-align: left; margin-top: 20px;">
+                    <p class="confidence-text">Disease Confidence: <strong>{{ result.conf_disease }}%</strong></p>
+                    <div class="confidence-bar-container">
+                        <div class="confidence-bar-fill" style="width: {{ result.conf_disease }}%;"></div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 35px; text-align: center;">
+                    <a href="{% url 'treatment' result.disease %}" style="display: inline-block; background-color: #d93025; color: white; padding: 15px 40px; font-size: 1.2em; font-weight: bold; text-decoration: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(217, 48, 37, 0.4); transition: transform 0.2s;">
+                        <i class="fa-solid fa-briefcase-medical"></i> HEAL MY FISH
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="result-container">
+            <div class="result-card" style="border-color: red;">
+                <h2 style="color: red;">Error</h2>
+                <p>{{ error }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+    </main>
+    <script>
+        function showPreview(event) {
+            if(event.target.files.length > 0){
+                // 1. Grab the file the user selected
+                var src = URL.createObjectURL(event.target.files[0]);
+                
+                // 2. Find the HTML elements
+                var preview = document.getElementById("image-preview");
+                var icon = document.getElementById("upload-icon");
+                var text = document.getElementById("upload-text");
+                
+                // 3. Swap them! Show the image, hide the icon and text
+                preview.src = src;
+                preview.style.display = "block";
+                icon.style.display = "none";
+                text.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
