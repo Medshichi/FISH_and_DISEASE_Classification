@@ -36,24 +36,40 @@
                     <input id="file-upload" type="file" name="image" accept="image/*" required onchange="showPreview(event)">
                 </label>
 
-                <div style="display: flex; gap: 20px; width: 100%; max-width: 600px; text-align: left; margin-bottom: 10px;">
-                    <div style="flex: 1;">
-                        <label style="font-weight: bold; color: #302f2f; margin-bottom: 5px; display: block;">Select Species Model:</label>
-                        <select name="species_model" style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #ccc; font-size: 1em; outline: none; cursor: pointer;">
-                            <option value="ResNet50" selected>ResNet50 (Highest Accuracy)</option>
-                            <option value="EfficientNetB0">EfficientNetB0 (Fastest)</option>
-                            <option value="DenseNet121">DenseNet121</option>
-                            <option value="Custom">Custom CNN Scratch</option>
+                <div class="model-selection">
+                    <div class="model-group">
+                        <label>Select Species Model:</label>
+                        <select name="species_model">
+                            <option value="ResNet50" {% if used_species_model == 'ResNet50' %}selected{% endif %}>
+                                ResNet50 (Highest Accuracy)
+                            </option>
+                            <option value="EfficientNetB0" {% if used_species_model == 'EfficientNetB0' %}selected{% endif %}>
+                                EfficientNetB0 (Fastest)
+                            </option>
+                            <option value="DenseNet121" {% if used_species_model == 'DenseNet121' %}selected{% endif %}>
+                                DenseNet121
+                            </option>
+                            <option value="Custom" {% if used_species_model == 'Custom' %}selected{% endif %}>
+                                Custom CNN Scratch
+                            </option>
                         </select>
                     </div>
 
-                    <div style="flex: 1;">
-                        <label style="font-weight: bold; color: #302f2f; margin-bottom: 5px; display: block;">Select Disease Model:</label>
-                        <select name="disease_model" style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #ccc; font-size: 1em; outline: none; cursor: pointer;">
-                            <option value="EfficientNetB0" selected>EfficientNetB0 (Recommended)</option>
-                            <option value="ResNet50">ResNet50</option>
-                            <option value="DenseNet121">DenseNet121</option>
-                            <option value="Custom">Custom CNN Scratch</option>
+                    <div class="model-group">
+                        <label>Select Disease Model:</label>
+                        <select name="disease_model">
+                            <option value="EfficientNetB0" {% if used_disease_model == 'EfficientNetB0' %}selected{% endif %}>
+                                EfficientNetB0 (Recommended)
+                            </option>
+                            <option value="ResNet50" {% if used_disease_model == 'ResNet50' %}selected{% endif %}>
+                                ResNet50
+                            </option>
+                            <option value="DenseNet121" {% if used_disease_model == 'DenseNet121' %}selected{% endif %}>
+                                DenseNet121
+                            </option>
+                            <option value="Custom" {% if used_disease_model == 'Custom' %}selected{% endif %}>
+                                Custom CNN Scratch
+                            </option>
                         </select>
                     </div>
                 </div>

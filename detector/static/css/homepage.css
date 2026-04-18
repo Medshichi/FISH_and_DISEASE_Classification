@@ -36,3 +36,54 @@ form { margin: 40px auto; display: flex; flex-direction: column; align-items: ce
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+.model-selection {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 600px;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.model-group {
+    flex: 1;
+}
+
+.model-group label {
+    font-weight: bold;
+    color: #302f2f;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.model-group select {
+    width: 100%;
+    padding: 12px 40px 12px 12px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    font-size: 1em;
+    outline: none;
+    cursor: pointer;
+    background-color: white;
+    color: #302f2f;
+    transition: all 0.3s ease;
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23302f2f' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 18px;
+}
+
+.model-group select:hover {
+    border-color: #302f2f;
+}
+
+.model-group select:focus {
+    border-color: #302f2f;
+    box-shadow: 0 0 8px rgba(48, 47, 47, 0.2);
+}
